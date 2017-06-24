@@ -267,8 +267,8 @@ void UKF::AugmentedSigmaPoints(MatrixXd& Xsig_out) {
   Xsig_aug.col(0) = x_aug;
   for (int i = 0; i < n_aug; ++i)
   {
-    Xsig_aug.col(i+1) = x_aug + lambda_sqrt * P_aug.col(i);
-    Xsig_aug.col(i+n_aug+1) = x_aug - lambda_sqrt * P_aug.col(i);
+    Xsig_aug.col(i+1) = x_aug + lambda_sqrt * A.col(i);
+    Xsig_aug.col(i+n_aug+1) = x_aug - lambda_sqrt * A.col(i);
   }
 /*******************************************************************************
  * Student part end
