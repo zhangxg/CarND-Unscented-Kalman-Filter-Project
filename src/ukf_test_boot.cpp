@@ -7,6 +7,7 @@
 using namespace std;
 using Eigen::MatrixXd;
 using Eigen::VectorXd;
+using Eigen::Vector3d;
 using std::vector;
 
 int main() {
@@ -24,6 +25,17 @@ int main() {
 
 	MatrixXd x_pred;
 	ukf.SigmaPointPrediction(x_aug);	
+
+	VectorXd x_p = VectorXd(5);
+  MatrixXd P_p = MatrixXd(5, 5);
+  ukf.PredictMeanAndCovariance(x_p, P_p);
+
+  // Vector3d v(1,2,3);
+  // Vector3d w(0,1,2);
+  // // cout << "Dot product: " << v.dot(w) << endl;
+  // // double dp = v.adjoint()*w; // automatic conversion of the inner product to a scalar
+  // // cout << "Dot product via a matrix product: " << dp << endl;
+  // cout << "Cross product:\n" << v.cross(w) << endl;
 
 	return 0;
 
