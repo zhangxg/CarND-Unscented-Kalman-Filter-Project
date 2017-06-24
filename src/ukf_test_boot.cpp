@@ -22,6 +22,9 @@ int main() {
 	MatrixXd x_aug;
 	ukf.AugmentedSigmaPoints(x_aug);
 
+	MatrixXd x_pred;
+	ukf.SigmaPointPrediction(x_aug);	
+
 	return 0;
 
 }

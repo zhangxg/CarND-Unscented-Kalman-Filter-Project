@@ -113,6 +113,11 @@ public:
     * augument stage
     */
   void AugmentedSigmaPoints(MatrixXd& Xsig);
+
+  /**
+    * sigma points prediction
+    */
+  void SigmaPointPrediction(MatrixXd& Xsig_out);
 };
 
 #endif /* UKF_H */
