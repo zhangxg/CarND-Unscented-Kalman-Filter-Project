@@ -108,6 +108,11 @@ public:
     * generate the sigma points
     */
   void GenerateSigmaPoints(MatrixXd& Xsig);
+
+  /**
+    * augument stage
+    */
+  void AugmentedSigmaPoints(MatrixXd& Xsig);
 };
 
 #endif /* UKF_H */
