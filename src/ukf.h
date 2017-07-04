@@ -103,26 +103,11 @@ public:
    */
   void UpdateRadar(MeasurementPackage meas_package);
 
-
-  /**
-    * generate the sigma points
-    */
   void GenerateSigmaPoints(MatrixXd& Xsig);
-
-  /**
-    * augument stage
-    */
   void AugmentedSigmaPoints(MatrixXd& Xsig);
-
-  /**
-    * sigma points prediction
-    */
   void SigmaPointPrediction(MatrixXd& Xsig_out);
-
   void PredictMeanAndCovariance(VectorXd& x_pred, MatrixXd& P_pred);
-
   void PredictRadarMeasurement(VectorXd& z_out, MatrixXd& S_out);
-
   void UpdateState(VectorXd& x_out, MatrixXd& P_out);
 };
 

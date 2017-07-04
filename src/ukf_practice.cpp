@@ -22,27 +22,15 @@ UKF::UKF() {
 
   // initial state vector
   x_ = VectorXd(5);
-  x_ <<  5.7441,
-         1.3800,
-         2.2049,
-         0.5015,
-         0.3528;
 
   // initial covariance matrix
   P_ = MatrixXd(5, 5);
-  P_ <<   0.0043,   -0.0013,    0.0030,   -0.0022,   -0.0020,
-          -0.0013,    0.0077,    0.0011,    0.0071,    0.0060,
-           0.0030,    0.0011,    0.0054,    0.0007,    0.0008,
-          -0.0022,    0.0071,    0.0007,    0.0098,    0.0100,
-          -0.0020,    0.0060,    0.0008,    0.0100,    0.0123;
 
   // Process noise standard deviation longitudinal acceleration in m/s^2
-  // std_a_ = 30;
-  std_a_ = 0.2;
+  std_a_ = 30;
 
   // Process noise standard deviation yaw acceleration in rad/s^2
-  // std_yawdd_ = 30;
-  std_yawdd_ = 0.2;
+  std_yawdd_ = 30;
 
   // Laser measurement noise standard deviation position1 in m
   std_laspx_ = 0.15;
@@ -66,16 +54,6 @@ UKF::UKF() {
 
   Hint: one or more values initialized above might be wildly off...
   */
-  ///* State dimension
-  // int n_x_ = 5;
-  n_x_ = 5;
-
-  ///* Augmented state dimension
-  n_aug_ = 7;
-
-  ///* Sigma point spreading parameter
-  // lambda_ = 3 - n_x_;
-
 }
 
 UKF::~UKF() {}
@@ -138,30 +116,71 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
 }
 
 void UKF::GenerateSigmaPoints(MatrixXd& Xsig) {
-  // the n_x_ has to be initialized in the header file, initialization in
-  // cpp file can not be referenced.  
-  // stupid mistake, I copied the code with "int n_x_ = 5", the int declares another value
-  // not the one from the header file. 
+  //set state dimension
+  int n_x = 5;
 
-  // cout << *this->n_aug_ << *this->n_x_ << endl;
-  // cout << *n_aug_ << *n_x_ << endl;
-  // cout << n_aug_ << "----" << n_x_ << endl;
-  Xsig = MatrixXd(n_x_, 2 * n_x_ + 1);
+  //define spreading parameter
+  double lambda = 3 - n_x;
+
+  //set example state
+  VectorXd x = VectorXd(n_x);
+  x <<   5.7441,
+         1.3800,
+         2.2049,
+         0.5015,
+         0.3528;
+
+  //set example covariance matrix
+  MatrixXd P = MatrixXd(n_x, n_x);
+  P <<     0.0043,   -0.0013,    0.0030,   -0.0022,   -0.0020,
+          -0.0013,    0.0077,    0.0011,    0.0071,    0.0060,
+           0.0030,    0.0011,    0.0054,    0.0007,    0.0008,
+          -0.0022,    0.0071,    0.0007,    0.0098,    0.0100,
+          -0.0020,    0.0060,    0.0008,    0.0100,    0.0123;
+
+  //create sigma point matrix
+  // MatrixXd Xsig = MatrixXd(n_x, 2 * n_x + 1);
+  Xsig = MatrixXd(n_x, 2 * n_x + 1);
 
   //calculate square root of P
-  MatrixXd A = P_.llt().matrixL();
-  // cout << "A" << endl << A << endl;
+  MatrixXd A = P.llt().matrixL();
+
+  cout << "A" << endl << A << endl;
+ 
+  /*******************************************************************************
+ * Student part begin
+ ******************************************************************************/
+
+  //your code goes here 
   
-  Xsig.col(0) = x_;
+  //calculate sigma points ...
+  //set sigma points as columns of matrix Xsig
 
-  lambda_ = 3 - n_x_;   // needs to calculate here. 
-  float lambda_sqrt = sqrt(lambda_ + n_x_);
+  Xsig.col(0) = x;
 
-  for (int i = 0; i < n_x_; ++i)
+  float lambda_sqrt = sqrt(lambda + n_x);
+
+  for (int i = 0; i < n_x; ++i)
   {
-    Xsig.col(i+1) = x_ + lambda_sqrt * A.col(i);
-    Xsig.col(i+n_x_+1) = x_ - A.col(i) * lambda_sqrt;
+    Xsig.col(i+1) = x + lambda_sqrt * A.col(i);
+    Xsig.col(i+n_x+1) = x - A.col(i) * lambda_sqrt;
   }  
+
+  // do the two actions in one loop.
+  // for (int i = 0; i < n_x; ++i)
+  // {
+  //   // Xsig.col(i+n_x+2) = x - lambda_sqrt * A.col(i);
+  //   Xsig.col(i+n_x+1) = x - A.col(i) * lambda_sqrt;
+  // }
+/*******************************************************************************
+ * Student part end
+ ******************************************************************************/
+
+  //print result
+  //std::cout << "Xsig = " << std::endl << Xsig << std::endl;
+
+  //write result
+  // *Xsig_out = Xsig;
 
 /* expected result:
    Xsig =
@@ -174,36 +193,95 @@ void UKF::GenerateSigmaPoints(MatrixXd& Xsig) {
 }
 
 void UKF::AugmentedSigmaPoints(MatrixXd& Xsig_out) {
+  //set state dimension
+  int n_x = 5;
+
+  //set augmented dimension
+  int n_aug = 7;
+
+  //Process noise standard deviation longitudinal acceleration in m/s^2
+  double std_a = 0.2;
+
+  //Process noise standard deviation yaw acceleration in rad/s^2
+  double std_yawdd = 0.2;
+
+  //define spreading parameter
+  double lambda = 3 - n_aug;
+
+  //set example state
+  VectorXd x = VectorXd(n_x);
+  x <<   5.7441,
+         1.3800,
+         2.2049,
+         0.5015,
+         0.3528;
+
+  //create example covariance matrix
+  MatrixXd P = MatrixXd(n_x, n_x);
+  P <<     0.0043,   -0.0013,    0.0030,   -0.0022,   -0.0020,
+          -0.0013,    0.0077,    0.0011,    0.0071,    0.0060,
+           0.0030,    0.0011,    0.0054,    0.0007,    0.0008,
+          -0.0022,    0.0071,    0.0007,    0.0098,    0.0100,
+          -0.0020,    0.0060,    0.0008,    0.0100,    0.0123;
 
   //create augmented mean vector
-  VectorXd x_aug = VectorXd(n_aug_);
-  x_aug.head(n_x_) = x_;
+  VectorXd x_aug = VectorXd(7);
+
+  //create augmented state covariance
+  MatrixXd P_aug = MatrixXd(7, 7);
+
+  //create sigma point matrix
+  MatrixXd Xsig_aug = MatrixXd(n_aug, 2 * n_aug + 1);
+
+/*******************************************************************************
+ * Student part begin
+ ******************************************************************************/
+ 
+  //create augmented mean state
+  x_aug.head(5) = x;
+  // x_aug[5] = std_a;
+  // x_aug[6] = std_yawdd;
+  // todo: set to zero, why? 
   x_aug[5] = 0;
   x_aug[6] = 0;
   cout << "x_aug" << endl << x_aug << endl;
-
-  //create augmented state covariance
-  MatrixXd P_aug = MatrixXd(n_aug_, n_aug_);
+  //create augmented covariance matrix
   P_aug.fill(0.0);  // fill zero
-  P_aug.topLeftCorner(n_x_, n_x_) = P_;
-  P_aug(5,5) = std_a_*std_a_;
-  P_aug(6,6) = std_yawdd_*std_yawdd_;
+  P_aug.topLeftCorner(n_x, n_x) = P;
+  // P_aug[5][5] = std_a;
+  // P_aug[6][6] = std_yawdd;
+  // P_aug(5,5) = std_a;
+  // P_aug(6,6) = std_yawdd;
+  // set to squared
+  // P_aug(5,5) = std_a**2;  // error:indirection requires pointer operand ('int' invalid)
+  // P_aug(6,6) = std_yawdd**2;
+
+  P_aug(5,5) = std_a*std_a;
+  P_aug(6,6) = std_yawdd*std_yawdd;
+   // P_aug.bottomRightCorner((2,2))  
   cout << "p_aug" << endl << P_aug << endl;
 
   //create square root matrix
   MatrixXd A = P_aug.llt().matrixL();
   cout << "p_aug_sqrt" << endl << A << endl;  
-
   //create augmented sigma points
-  Xsig_out = MatrixXd(n_aug_, 2 * n_aug_ + 1);
-  lambda_ = 3 - n_aug_;
-  float lambda_sqrt = sqrt(lambda_ + n_aug_);
-  Xsig_out.col(0) = x_aug;
-  for (int i = 0; i < n_aug_; ++i)
+  
+  float lambda_sqrt = sqrt(lambda + n_aug);
+  Xsig_aug.col(0) = x_aug;
+  for (int i = 0; i < n_aug; ++i)
   {
-    Xsig_out.col(i+1) = x_aug + lambda_sqrt * A.col(i);
-    Xsig_out.col(i+n_aug_+1) = x_aug - lambda_sqrt * A.col(i);
+    Xsig_aug.col(i+1) = x_aug + lambda_sqrt * A.col(i);
+    Xsig_aug.col(i+n_aug+1) = x_aug - lambda_sqrt * A.col(i);
   }
+/*******************************************************************************
+ * Student part end
+ ******************************************************************************/
+
+  //print result
+  std::cout << "Xsig_aug = " << std::endl << Xsig_aug << std::endl;
+
+  //write result
+  // *Xsig_out = Xsig_aug;
 
 /* expected result:
    Xsig_aug =

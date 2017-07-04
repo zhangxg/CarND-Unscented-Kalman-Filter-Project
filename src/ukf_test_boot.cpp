@@ -19,28 +19,29 @@ int main() {
 
 	cout << "hello, ukf" << endl;
 
-	MatrixXd Xsig = MatrixXd(11, 5);
-	ukf.GenerateSigmaPoints(Xsig);
-	cout << Xsig << endl;
+  //  MatrixXd Xsig;
+	// ukf.GenerateSigmaPoints(Xsig);
+	// cout << endl << Xsig << endl;
 
 	MatrixXd x_aug;
 	ukf.AugmentedSigmaPoints(x_aug);
+  cout << endl << x_aug << endl;
+	
+  // MatrixXd x_pred;
+	// ukf.SigmaPointPrediction(x_aug);	
 
-	MatrixXd x_pred;
-	ukf.SigmaPointPrediction(x_aug);	
-
-	VectorXd x_p = VectorXd(5);
-  MatrixXd P_p = MatrixXd(5, 5);
-  ukf.PredictMeanAndCovariance(x_p, P_p);
+	// VectorXd x_p = VectorXd(5);
+ //  MatrixXd P_p = MatrixXd(5, 5);
+ //  ukf.PredictMeanAndCovariance(x_p, P_p);
 
 
-  VectorXd z_out = VectorXd(3);
-  MatrixXd S_out = MatrixXd(3, 3);
-  ukf.PredictRadarMeasurement(z_out, S_out);
+ //  VectorXd z_out = VectorXd(3);
+ //  MatrixXd S_out = MatrixXd(3, 3);
+ //  ukf.PredictRadarMeasurement(z_out, S_out);
 
-  VectorXd x_out = VectorXd(5);
-  MatrixXd P_out = MatrixXd(5, 5);
-  ukf.UpdateState(x_out, P_out);
+ //  VectorXd x_out = VectorXd(5);
+ //  MatrixXd P_out = MatrixXd(5, 5);
+ //  ukf.UpdateState(x_out, P_out);
 
   // Vector3d v(1,2,3);
   // Vector3d w(0,1,2);
