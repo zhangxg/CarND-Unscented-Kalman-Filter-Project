@@ -23,16 +23,30 @@ int main() {
 	// ukf.GenerateSigmaPoints(Xsig);
 	// cout << endl << Xsig << endl;
 
-	MatrixXd x_aug;
-	ukf.AugmentedSigmaPoints(x_aug);
-  cout << endl << x_aug << endl;
+	// MatrixXd x_aug;
+	// ukf.AugmentedSigmaPoints(x_aug);
+  // cout << endl << x_aug << endl;
 	
-  // MatrixXd x_pred;
-	// ukf.SigmaPointPrediction(x_aug);	
+ //  MatrixXd x_pred;
+	// ukf.SigmaPointPrediction(x_pred);	
+ //  cout << endl << x_pred << endl;
 
-	// VectorXd x_p = VectorXd(5);
- //  MatrixXd P_p = MatrixXd(5, 5);
- //  ukf.PredictMeanAndCovariance(x_p, P_p);
+	VectorXd x_p; // = VectorXd(5);
+  MatrixXd P_p; // = MatrixXd(5, 5);
+  ukf.PredictMeanAndCovariance(x_p, P_p);
+  cout << "Predicted state" << endl;
+  cout << x_p << endl;
+  cout << "Predicted covariance matrix" << endl;
+  cout << P_p << endl;
+
+
+  VectorXd x_pp; // = VectorXd(5);
+  MatrixXd P_pp; // = MatrixXd(5, 5);
+  ukf.PredictMeanAndCovariance2(x_pp, P_pp);
+  cout << "Predicted state" << endl;
+  cout << x_pp << endl;
+  cout << "Predicted covariance matrix" << endl;
+  cout << P_pp << endl;
 
 
  //  VectorXd z_out = VectorXd(3);
