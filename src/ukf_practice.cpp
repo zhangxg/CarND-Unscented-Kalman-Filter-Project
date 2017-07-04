@@ -704,6 +704,21 @@ void UKF::PredictRadarMeasurement(VectorXd& z_out, MatrixXd& S_out) {
   //write result
   // *z_out = z_pred;
   // *S_out = S;
+
+  /**
+    expected result z_out:
+    z_pred =
+        6.12155
+        0.245993
+        2.10313
+
+    expected result p:
+     S =
+        0.0946171 -0.000139448 0.00407016
+        -0.000139448 0.000617548 -0.000770652
+        0.00407016 -0.000770652 0.0180917
+  */
+
 }
 
 void UKF::UpdateState(VectorXd& x_out, MatrixXd& P_out) {

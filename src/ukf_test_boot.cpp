@@ -31,17 +31,30 @@ int main() {
 	// ukf.SigmaPointPrediction(x_pred);	
  //  cout << endl << x_pred << endl;
 
-	VectorXd x_p; // = VectorXd(5);
-  MatrixXd P_p; // = MatrixXd(5, 5);
-  ukf.PredictMeanAndCovariance(x_p, P_p);
-  cout << "Predicted state" << endl;
-  cout << x_p << endl;
-  cout << "Predicted covariance matrix" << endl;
-  cout << P_p << endl;
+	// VectorXd x_p; // = VectorXd(5);
+ //  MatrixXd P_p; // = MatrixXd(5, 5);
+ //  ukf.PredictMeanAndCovariance(x_p, P_p);
+ //  cout << "Predicted state" << endl;
+ //  cout << x_p << endl;
+ //  cout << "Predicted covariance matrix" << endl;
+ //  cout << P_p << endl;
 
- //  VectorXd z_out = VectorXd(3);
- //  MatrixXd S_out = MatrixXd(3, 3);
- //  ukf.PredictRadarMeasurement(z_out, S_out);
+  VectorXd z_out;
+  MatrixXd S_out;
+  ukf.PredictRadarMeasurement(z_out, S_out);
+  //print result
+  cout << "z_pred1: " << endl << z_out << endl;
+  cout << "S1: " << endl << S_out << endl;
+
+  cout << "=========\n\n";
+  VectorXd z_outt;
+  MatrixXd S_outt;
+  ukf.PredictRadarMeasurement2(z_outt, S_outt);
+  //print result
+  cout << "z_pred2: " << endl << z_outt << endl;
+  cout << "S2: " << endl << S_outt << endl;
+
+
 
  //  VectorXd x_out = VectorXd(5);
  //  MatrixXd P_out = MatrixXd(5, 5);

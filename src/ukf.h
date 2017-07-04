@@ -108,6 +108,7 @@ public:
   void SigmaPointPrediction(MatrixXd& Xsig_out);
   void PredictMeanAndCovariance(VectorXd& x_pred, MatrixXd& P_pred);
   void PredictRadarMeasurement(VectorXd& z_out, MatrixXd& S_out);
+  void PredictRadarMeasurement2(VectorXd& z_out, MatrixXd& S_out);
   void UpdateState(VectorXd& x_out, MatrixXd& P_out);
 };
 
