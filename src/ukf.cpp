@@ -162,15 +162,6 @@ void UKF::GenerateSigmaPoints(MatrixXd& Xsig) {
     Xsig.col(i+1) = x_ + lambda_sqrt * A.col(i);
     Xsig.col(i+n_x_+1) = x_ - A.col(i) * lambda_sqrt;
   }  
-
-/* expected result:
-   Xsig =
-    5.7441  5.85768   5.7441   5.7441   5.7441   5.7441  5.63052   5.7441   5.7441   5.7441   5.7441
-      1.38  1.34566  1.52806     1.38     1.38     1.38  1.41434  1.23194     1.38     1.38     1.38
-    2.2049  2.28414  2.24557  2.29582   2.2049   2.2049  2.12566  2.16423  2.11398   2.2049   2.2049
-    0.5015  0.44339 0.631886 0.516923 0.595227   0.5015  0.55961 0.371114 0.486077 0.407773   0.5015
-    0.3528 0.299973 0.462123 0.376339  0.48417 0.418721 0.405627 0.243477 0.329261  0.22143 0.286879
-*/
 }
 
 void UKF::AugmentedSigmaPoints(MatrixXd& Xsig_out) {
@@ -204,17 +195,6 @@ void UKF::AugmentedSigmaPoints(MatrixXd& Xsig_out) {
     Xsig_out.col(i+1) = x_aug + lambda_sqrt * A.col(i);
     Xsig_out.col(i+n_aug_+1) = x_aug - lambda_sqrt * A.col(i);
   }
-
-/* expected result:
-   Xsig_aug =
-  5.7441  5.85768   5.7441   5.7441   5.7441   5.7441   5.7441   5.7441  5.63052   5.7441   5.7441   5.7441   5.7441   5.7441   5.7441
-    1.38  1.34566  1.52806     1.38     1.38     1.38     1.38     1.38  1.41434  1.23194     1.38     1.38     1.38     1.38     1.38
-  2.2049  2.28414  2.24557  2.29582   2.2049   2.2049   2.2049   2.2049  2.12566  2.16423  2.11398   2.2049   2.2049   2.2049   2.2049
-  0.5015  0.44339 0.631886 0.516923 0.595227   0.5015   0.5015   0.5015  0.55961 0.371114 0.486077 0.407773   0.5015   0.5015   0.5015
-  0.3528 0.299973 0.462123 0.376339  0.48417 0.418721   0.3528   0.3528 0.405627 0.243477 0.329261  0.22143 0.286879   0.3528   0.3528
-       0        0        0        0        0        0  0.34641        0        0        0        0        0        0 -0.34641        0
-       0        0        0        0        0        0        0  0.34641        0        0        0        0        0        0 -0.34641
-*/
 }
 
 void UKF::SigmaPointPrediction(MatrixXd& Xsig_pred) {
@@ -270,16 +250,6 @@ void UKF::SigmaPointPrediction(MatrixXd& Xsig_pred) {
     Xsig_pred(3,i) = yaw_p;
     Xsig_pred(4,i) = yawd_p;
   }
-
-  /**
-  expected result:
-  Xsig_pred =
-    5.93553 6.06251 5.92217 5.9415 5.92361 5.93516 5.93705 5.93553 5.80832 5.94481 5.92935 5.94553 5.93589 5.93401 5.93553
-    1.48939 1.44673 1.66484 1.49719 1.508 1.49001 1.49022 1.48939 1.5308 1.31287 1.48182 1.46967 1.48876 1.48855 1.48939
-    2.2049 2.28414 2.24557 2.29582 2.2049 2.2049 2.23954 2.2049 2.12566 2.16423 2.11398 2.2049 2.2049 2.17026 2.2049
-    0.53678 0.473387 0.678098 0.554557 0.643644 0.543372 0.53678 0.538512 0.600173 0.395462 0.519003 0.429916 0.530188 0.53678 0.535048
-    0.3528 0.299973 0.462123 0.376339 0.48417 0.418721 0.3528 0.387441 0.405627 0.243477 0.329261 0.22143 0.286879 0.3528 0.318159
-  */
 }
 
 void UKF::PredictMeanAndCovariance(VectorXd& x_pred, MatrixXd& P_pred) {
@@ -317,76 +287,6 @@ void UKF::PredictMeanAndCovariance(VectorXd& x_pred, MatrixXd& P_pred) {
 
     P_pred = P_pred + weights_(i) * x_diff * x_diff.transpose() ;
   }
-}
-
-void UKF::PredictMeanAndCovariance2(VectorXd& x_pred, MatrixXd& P_pred) {
-//set state dimension
-  int n_x = 5;
-
-  //set augmented dimension
-  int n_aug = 7;
-
-  //define spreading parameter
-  double lambda = 3 - n_aug;
-
-  //create example matrix with predicted sigma points
-  MatrixXd Xsig_pred = MatrixXd(n_x, 2 * n_aug + 1);
-  // Xsig_pred <<
-  //        5.9374,  6.0640,   5.925,  5.9436,  5.9266,  5.9374,  5.9389,  5.9374,  5.8106,  5.9457,  5.9310,  5.9465,  5.9374,  5.9359,  5.93744,
-  //          1.48,  1.4436,   1.660,  1.4934,  1.5036,    1.48,  1.4868,    1.48,  1.5271,  1.3104,  1.4787,  1.4674,    1.48,  1.4851,    1.486,
-  //         2.204,  2.2841,  2.2455,  2.2958,   2.204,   2.204,  2.2395,   2.204,  2.1256,  2.1642,  2.1139,   2.204,   2.204,  2.1702,   2.2049,
-  //        0.5367, 0.47338, 0.67809, 0.55455, 0.64364, 0.54337,  0.5367, 0.53851, 0.60017, 0.39546, 0.51900, 0.42991, 0.530188,  0.5367, 0.535048,
-  //         0.352, 0.29997, 0.46212, 0.37633,  0.4841, 0.41872,   0.352, 0.38744, 0.40562, 0.24347, 0.32926,  0.2214, 0.28687,   0.352, 0.318159;
-
-  
-  //create vector for weights
-  VectorXd weights = VectorXd(2*n_aug+1);
-  
-  //create vector for predicted state
-  VectorXd x = VectorXd(n_x);
-
-  //create covariance matrix for prediction
-  MatrixXd P = MatrixXd(n_x, n_x);
-
-
-/*******************************************************************************
- * Student part begin
- ******************************************************************************/
-
-  //set weights
-  // what's the na in the formula? it's n_aug
-  // weights(0) = lambda / (lambda+1);
-  weights(0) = lambda/(lambda+n_aug);
-  for (int i = 1; i < n_aug*2+1; ++i)
-  {
-    weights(i) = 0.5 / (lambda + n_aug);
-  }
-
-  // cout << "weights2:" << endl << weights << endl;
-  //predict state mean
-  // multiple each column by weights, element wise, and make sum
-  x.fill(0); // initialize the elements to zeros
-  for (int i = 0; i < n_aug*2+1; ++i)
-  {
-    // x +=  // don't know how to make the vector*vector element wise mutiple
-    x += weights(i) * Xsig_pred.col(i);
-  }
-
-  //predict state covariance matrix
-  P.fill(0);
-  for (int i = 0; i < 2 * n_aug + 1; i++) {  //iterate over sigma points
-    // state difference
-    VectorXd x_diff = Xsig_pred.col(i) - x; //x is the predicted mean
-    //angle normalization   // how to understand this? 
-    while (x_diff(3)> M_PI) x_diff(3)-=2.*M_PI;
-    while (x_diff(3)<-M_PI) x_diff(3)+=2.*M_PI;
-
-    P = P + weights(i) * x_diff * x_diff.transpose() ;
-  }
-
-  //write result
-  x_pred = x;
-  P_pred = P;
 }
 
 void UKF::PredictRadarMeasurement(VectorXd& z_out, MatrixXd& S_out) {
