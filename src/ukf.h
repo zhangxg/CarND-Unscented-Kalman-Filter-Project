@@ -110,6 +110,7 @@ public:
   void PredictRadarMeasurement(VectorXd& z_out, MatrixXd& S_out, MatrixXd& zsig_out);
   void PredictRadarMeasurement2(VectorXd& z_out, MatrixXd& S_out);
   void UpdateState(VectorXd& x_out, MatrixXd& P_out);
+  void UpdateState2(VectorXd& x_out, MatrixXd& P_out);
 };
 
 #endif /* UKF_H */
