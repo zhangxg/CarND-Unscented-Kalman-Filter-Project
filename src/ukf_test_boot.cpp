@@ -57,18 +57,22 @@ int main() {
   // cout << "S2: " << endl << S_outt << endl;
 
 
+  // VectorXd x_out; //= VectorXd(5);
+  // MatrixXd P_out; // = MatrixXd(5, 5);
+  // VectorXd z = VectorXd(3);
+  // z <<
+  //     5.9214,
+  //     0.2187,
+  //     2.0062;
+  // ukf.UpdateState(x_out, P_out, z);
+  // cout << "x_out: " << endl << x_out << endl;
+  // cout << "P_out: " << endl << P_out << endl;
 
-  VectorXd x_out; //= VectorXd(5);
-  MatrixXd P_out; // = MatrixXd(5, 5);
-  ukf.UpdateState(x_out, P_out);
-  cout << "x_out: " << endl << x_out << endl;
-  cout << "P_out: " << endl << P_out << endl;
-
-  VectorXd x_outt; // = VectorXd(5);
-  MatrixXd P_outt; // = MatrixXd(5, 5);
-  ukf.UpdateState2(x_outt, P_outt);
-  cout << "x_out2: " << endl << x_outt << endl;
-  cout << "P_out2: " << endl << P_outt << endl;
+  // VectorXd x_outt; // = VectorXd(5);
+  // MatrixXd P_outt; // = MatrixXd(5, 5);
+  // ukf.UpdateState2(x_outt, P_outt);
+  // cout << "x_out2: " << endl << x_outt << endl;
+  // cout << "P_out2: " << endl << P_outt << endl;
 
   // Vector3d v(1,2,3);
   // Vector3d w(0,1,2);

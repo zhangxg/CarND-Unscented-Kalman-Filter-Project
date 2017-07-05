@@ -34,6 +34,9 @@ public:
   ///* time when the state is true, in us
   long long time_us_;
 
+  ///* the time interval between two measurements
+  double delta_t_;
+
   ///* Process noise standard deviation longitudinal acceleration in m/s^2
   double std_a_;
 
@@ -108,9 +111,7 @@ public:
   void SigmaPointPrediction(MatrixXd& Xsig_out);
   void PredictMeanAndCovariance(VectorXd& x_pred, MatrixXd& P_pred);
   void PredictRadarMeasurement(VectorXd& z_out, MatrixXd& S_out, MatrixXd& zsig_out);
-  void PredictRadarMeasurement2(VectorXd& z_out, MatrixXd& S_out);
-  void UpdateState(VectorXd& x_out, MatrixXd& P_out);
-  void UpdateState2(VectorXd& x_out, MatrixXd& P_out);
+  void UpdateState(VectorXd& x_out, MatrixXd& P_out, VectorXd& z);
 };
 
 #endif /* UKF_H */
