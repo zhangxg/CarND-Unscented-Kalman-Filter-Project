@@ -41,10 +41,12 @@ int main() {
 
   VectorXd z_out;
   MatrixXd S_out;
-  ukf.PredictRadarMeasurement(z_out, S_out);
+  MatrixXd zsig_out;
+  ukf.PredictRadarMeasurement(z_out, S_out, zsig_out);
   //print result
   cout << "z_pred1: " << endl << z_out << endl;
   cout << "S1: " << endl << S_out << endl;
+  cout << "zsig_out: " << endl << zsig_out << endl;
 
   cout << "=========\n\n";
   VectorXd z_outt;
