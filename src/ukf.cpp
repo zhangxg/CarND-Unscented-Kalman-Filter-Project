@@ -258,7 +258,7 @@ void UKF::PredictMeanAndCovariance(VectorXd& x_pred, MatrixXd& P_pred) {
   // get the prediction points
   MatrixXd Xsig_pred;
   SigmaPointPrediction(Xsig_pred);
-  cout << "x_prediction: " << endl << Xsig_pred << endl;
+  // cout << "x_prediction: " << endl << Xsig_pred << endl;
 
   //create vector for weights
   weights_ = VectorXd(2*n_aug_+1);
@@ -493,16 +493,16 @@ void UKF::UpdateState(VectorXd& x_out, MatrixXd& P_out) {
   double lambda = 3 - n_aug_;
   MatrixXd Xsig_pred;
   SigmaPointPrediction(Xsig_pred);
-  cout << "Xsig_pred: " << endl << Xsig_pred << endl;
+  // cout << "Xsig_pred: " << endl << Xsig_pred << endl;
 
   MatrixXd Zsig;
   VectorXd z_pred;
   MatrixXd S;
 
   PredictRadarMeasurement(z_pred, S, Zsig);
-  cout << "Zsig: " << endl << Zsig << endl;
-  cout << "z_pred: " << endl << z_pred << endl;
-  cout << "S: " << endl << S << endl;
+  // cout << "Zsig: " << endl << Zsig << endl;
+  // cout << "z_pred: " << endl << z_pred << endl;
+  // cout << "S: " << endl << S << endl;
 
   // cout << "weights_ " << endl << weights_ << endl;  
 
