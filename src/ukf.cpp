@@ -50,13 +50,16 @@ UKF::UKF() {
   std_yawdd_ = 0.2;
 
   // Laser measurement noise standard deviation position1 in m
-  std_laspx_ = 0.15;
+  // std_laspx_ = 0.15;
+  std_laspx_ = 0.015;
 
   // Laser measurement noise standard deviation position2 in m
-  std_laspy_ = 0.15;
+  // std_laspy_ = 0.15;
+  std_laspy_ = 0.015;
 
   // Radar measurement noise standard deviation radius in m
-  std_radr_ = 0.3;
+  // std_radr_ = 0.3;
+  std_radr_ = 0.1;
 
   // Radar measurement noise standard deviation angle in rad
   // std_radphi_ = 0.03;
@@ -116,6 +119,7 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
                0.0030,    0.0011,    0.0054,    0.0007,    0.0008,
               -0.0022,    0.0071,    0.0007,    0.0098,    0.0100,
               -0.0020,    0.0060,    0.0008,    0.0100,    0.0123;
+      // P_ = MatrixXd::Identity(5, 5);
 
       if (meas_package.sensor_type_ == MeasurementPackage::RADAR) {
           /**
