@@ -494,11 +494,18 @@ void UKF::UpdateState(VectorXd& x_out, MatrixXd& P_out) {
   MatrixXd Xsig_pred;
   SigmaPointPrediction(Xsig_pred);
 
+  cout << "Xsig_pred: " << endl << Xsig_pred << endl;
+
   MatrixXd Zsig;
   VectorXd z_pred;
   MatrixXd S;
 
   PredictRadarMeasurement(z_pred, S, Zsig);
+  cout << "Zsig: " << endl << Zsig << endl;
+  cout << "z_pred: " << endl << z_pred << endl;
+  cout << "S: " << endl << S << endl;
+
+  // cout << "weights_ " << endl << weights_ << endl;  
 
   //create example vector for incoming radar measurement
   VectorXd z = VectorXd(n_z);
@@ -571,6 +578,8 @@ void UKF::UpdateState2(VectorXd& x_out, MatrixXd& P_out) {
     weights(i) = weight;
   }
 
+  // cout << "weights " << endl << weights << endl;
+
   //create example matrix with predicted sigma points
   MatrixXd Xsig_pred = MatrixXd(n_x, 2 * n_aug + 1);
   Xsig_pred <<
@@ -579,7 +588,12 @@ void UKF::UpdateState2(VectorXd& x_out, MatrixXd& P_out) {
           2.204,  2.2841,  2.2455,  2.2958,   2.204,   2.204,  2.2395,   2.204,  2.1256,  2.1642,  2.1139,   2.204,   2.204,  2.1702,   2.2049,
          0.5367, 0.47338, 0.67809, 0.55455, 0.64364, 0.54337,  0.5367, 0.53851, 0.60017, 0.39546, 0.51900, 0.42991, 0.530188,  0.5367, 0.535048,
           0.352, 0.29997, 0.46212, 0.37633,  0.4841, 0.41872,   0.352, 0.38744, 0.40562, 0.24347, 0.32926,  0.2214, 0.28687,   0.352, 0.318159;
-
+  // Xsig_pred <<
+  //       5.93553,6.0625,5.92217,5.9415,5.92361,5.93516,5.93705,5.93553,5.80833,5.94481,5.92935,5.94553,5.93589,5.93401,5.93553,
+  //       1.48939,1.44673,1.66483,1.49719,1.508,1.49001,1.49022,1.48939,1.5308,1.31288,1.48182,1.46967,1.48876,1.48855,1.48939,
+  //       2.2049,2.28414,2.24557,2.29582,2.2049,2.2049,2.23954,2.2049,2.12566,2.16423,2.11398,2.2049,2.2049,2.17026,2.2049,
+  //       0.53678,0.473388,0.678099,0.554557,0.643644,0.543372,0.53678,0.538512,0.600172,0.395461,0.519003,0.429916,0.530188,0.53678,0.535048,
+  //       0.3528,0.299973,0.462123,0.376339,0.48417,0.418721,0.3528,0.387441,0.405627,0.243477,0.329261,0.22143,0.286879,0.3528,0.318159;
   //create example vector for predicted state mean
   VectorXd x = VectorXd(n_x);
   x <<
@@ -588,6 +602,7 @@ void UKF::UpdateState2(VectorXd& x_out, MatrixXd& P_out) {
      2.20528,
     0.536853,
     0.353577;
+  // x = x_;
 
   //create example matrix for predicted state covariance
   MatrixXd P = MatrixXd(n_x,n_x);
@@ -597,6 +612,7 @@ void UKF::UpdateState2(VectorXd& x_out, MatrixXd& P_out) {
   0.0034157,   0.001492,  0.0058012, 0.00077863, 0.000792973,
  -0.0034819,  0.0098018, 0.00077863,   0.011923,   0.0112491,
  -0.0029937,  0.0079109, 0.00079297,   0.011249,   0.0126972;
+  // P = P_;
 
   //create example matrix with sigma points in measurement space
   MatrixXd Zsig = MatrixXd(n_z, 2 * n_aug + 1);
@@ -604,13 +620,20 @@ void UKF::UpdateState2(VectorXd& x_out, MatrixXd& P_out) {
       6.1190,  6.2334,  6.1531,  6.1283,  6.1143,  6.1190,  6.1221,  6.1190,  6.0079,  6.0883,  6.1125,  6.1248,  6.1190,  6.1188,  6.12057,
      0.24428,  0.2337, 0.27316, 0.24616, 0.24846, 0.24428, 0.24530, 0.24428, 0.25700, 0.21692, 0.24433, 0.24193, 0.24428, 0.24515, 0.245239,
       2.1104,  2.2188,  2.0639,   2.187,  2.0341,  2.1061,  2.1450,  2.1092,  2.0016,   2.129,  2.0346,  2.1651,  2.1145,  2.0786,  2.11295;
-
+  // Zsig << 
+  //       6.11954,6.23274,6.15173,6.12724,6.11254,6.11934,6.12122,6.11954,6.00666,6.08806,6.11171,6.12448,6.11974,6.11787,6.11954,
+  //       0.245851,0.234255,0.274046,0.246849,0.249279,0.245965,0.245923,0.245851,0.257693,0.217355,0.244896,0.242332,0.245737,0.24578,0.245851,
+  //       2.11225,2.21914,2.06474,2.18799,2.03565,2.1081,2.14548,2.11115,2.00221,2.13,2.03506,2.16622,2.1163,2.07902,2.11334;
   //create example vector for mean predicted measurement
   VectorXd z_pred = VectorXd(n_z);
   z_pred <<
       6.12155,
      0.245993,
       2.10313;
+  // z_pred << 
+  //       6.11934,
+  //       0.245834,
+  //       2.10274;
 
   //create example matrix for predicted measurement covariance
   MatrixXd S = MatrixXd(n_z,n_z);
@@ -618,6 +641,10 @@ void UKF::UpdateState2(VectorXd& x_out, MatrixXd& P_out) {
       0.0946171, -0.000139448,   0.00407016,
    -0.000139448,  0.000617548, -0.000770652,
      0.00407016, -0.000770652,    0.0180917;
+  // S << 
+  //     0.0946302,-0.000145123,0.00408742,
+  //     -0.000145123,0.000624209,-0.000781362,
+  //     0.00408742,-0.000781362,0.0180473;
 
   //create example vector for incoming radar measurement
   VectorXd z = VectorXd(n_z);
