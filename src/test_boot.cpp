@@ -34,22 +34,36 @@ int main() {
 
         VectorXd estimate(4);
 
+        // double p_x = ukf.x_(0);
+        // double p_y = ukf.x_(1);
+        // double v1  = ukf.x_(2) * cos(ukf.x_(3));  
+        // double v2 = ukf.x_(3) * sin(ukf.x_(3));
+
+        // estimate(0) = p_x;
+        // estimate(1) = p_y;
+        // estimate(2) = v1;
+        // estimate(3) = v2;
+
         double p_x = ukf.x_(0);
         double p_y = ukf.x_(1);
-        double v1  = ukf.x_(2) * cos(ukf.x_(3));  
-        double v2 = ukf.x_(3) * sin(ukf.x_(3));
+        double v  = ukf.x_(2);
+        double yaw = ukf.x_(3);
+
+        double v1 = cos(yaw)*v;
+        double v2 = sin(yaw)*v;
 
         estimate(0) = p_x;
         estimate(1) = p_y;
         estimate(2) = v1;
         estimate(3) = v2;
+
         estimations.push_back(estimate);
 
         ground_truth.push_back(measurement_pack_list[k].ground_truth_);
 
         VectorXd rmse(4);
         rmse = tools.CalculateRMSE(estimations, ground_truth);
-        cout << "rmse=\n" << rmse << endl;
+        cout << "rmse=\n" << rmse.transpose() << endl;
 
     }
     return 0;

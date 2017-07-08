@@ -41,34 +41,55 @@ UKF::UKF() {
   //         -0.0022,    0.0071,    0.0007,    0.0098,    0.0100,
   //         -0.0020,    0.0060,    0.0008,    0.0100,    0.0123;
 
-  // Process noise standard deviation longitudinal acceleration in m/s^2
-  // std_a_ = 30;
+  // // Process noise standard deviation longitudinal acceleration in m/s^2
+  // // std_a_ = 30;
+  // // std_a_ = 0.2;
+  // std_a_ = 0.1;
+
+  // // Process noise standard deviation yaw acceleration in rad/s^2
+  // // std_yawdd_ = 30;
+  // // std_yawdd_ = 0.2;
+  // std_yawdd_ = 0.1;
+
+  // // Laser measurement noise standard deviation position1 in m
+  // // std_laspx_ = 0.15;
+  // // std_laspx_ = 0.015;
+  // // std_laspx_ = 0.0015;
+  // std_laspx_ = 0.05;
+
+  // // Laser measurement noise standard deviation position2 in m
+  // // std_laspy_ = 0.15;
+  // // std_laspy_ = 0.015;
+  // // std_laspy_ = 0.0015;
+  // std_laspy_ = 0.05;
+
+  // // Radar measurement noise standard deviation radius in m
+  // // std_radr_ = 0.3;
+  // // std_radr_ = 0.1;
+  // // std_radr_ = 0.01;
+  // std_radr_ = 0.15;
+
+  // // Radar measurement noise standard deviation angle in rad
+  // // std_radphi_ = 0.03;
+  // // std_radphi_ = 0.0175;
+  // // std_radphi_ = 0.1;
+  // // std_radphi_ = 0.15;
+  // std_radphi_ = 0.5;
+
+  // // Radar measurement noise standard deviation radius change in m/s
+  // // std_radrd_ = 0.3;
+  // // std_radrd_ = 0.1;
+  // // std_radrd_ = 1;
+  // std_radrd_ = 0.03;
+
   std_a_ = 0.2;
-
-  // Process noise standard deviation yaw acceleration in rad/s^2
-  // std_yawdd_ = 30;
   std_yawdd_ = 0.2;
-
-  // Laser measurement noise standard deviation position1 in m
-  // std_laspx_ = 0.15;
   std_laspx_ = 0.015;
-
-  // Laser measurement noise standard deviation position2 in m
-  // std_laspy_ = 0.15;
   std_laspy_ = 0.015;
-
-  // Radar measurement noise standard deviation radius in m
-  // std_radr_ = 0.3;
   std_radr_ = 0.1;
-
-  // Radar measurement noise standard deviation angle in rad
-  // std_radphi_ = 0.03;
   std_radphi_ = 0.0175;
-
-  // Radar measurement noise standard deviation radius change in m/s
-  // std_radrd_ = 0.3;
   std_radrd_ = 0.1;
-  
+
   /**
   TODO:
 

@@ -137,7 +137,7 @@ int main()
           msgJson["rmse_vx"] = RMSE(2);
           msgJson["rmse_vy"] = RMSE(3);
 
-          cout << endl << "===RMSE===" << endl << RMSE << endl;
+          cout << endl << "===RMSE===" << endl << RMSE.transpose() << endl;
           
           auto msg = "42[\"estimate_marker\"," + msgJson.dump() + "]";
           // std::cout << msg << std::endl;
