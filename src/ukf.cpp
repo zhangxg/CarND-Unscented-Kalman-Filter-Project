@@ -25,63 +25,13 @@ UKF::UKF() {
   // if this is false, radar measurements will be ignored (except during init)
   use_radar_ = true;
 
-  // initial state vector
-  // x_ = VectorXd(5);
-  // x_ <<  5.7441,
-  //        1.3800,
-  //        2.2049,
-  //        0.5015,
-  //        0.3528;
+  ///* State dimension
+  n_x_ = 5;
 
-  // // initial covariance matrix
-  // P_ = MatrixXd(5, 5);
-  // P_ <<   0.0043,   -0.0013,    0.0030,   -0.0022,   -0.0020,
-  //         -0.0013,    0.0077,    0.0011,    0.0071,    0.0060,
-  //          0.0030,    0.0011,    0.0054,    0.0007,    0.0008,
-  //         -0.0022,    0.0071,    0.0007,    0.0098,    0.0100,
-  //         -0.0020,    0.0060,    0.0008,    0.0100,    0.0123;
+  ///* Augmented state dimension
+  n_aug_ = 7;
 
-  // // Process noise standard deviation longitudinal acceleration in m/s^2
-  // // std_a_ = 30;
-  // // std_a_ = 0.2;
-  // std_a_ = 0.1;
-
-  // // Process noise standard deviation yaw acceleration in rad/s^2
-  // // std_yawdd_ = 30;
-  // // std_yawdd_ = 0.2;
-  // std_yawdd_ = 0.1;
-
-  // // Laser measurement noise standard deviation position1 in m
-  // // std_laspx_ = 0.15;
-  // // std_laspx_ = 0.015;
-  // // std_laspx_ = 0.0015;
-  // std_laspx_ = 0.05;
-
-  // // Laser measurement noise standard deviation position2 in m
-  // // std_laspy_ = 0.15;
-  // // std_laspy_ = 0.015;
-  // // std_laspy_ = 0.0015;
-  // std_laspy_ = 0.05;
-
-  // // Radar measurement noise standard deviation radius in m
-  // // std_radr_ = 0.3;
-  // // std_radr_ = 0.1;
-  // // std_radr_ = 0.01;
-  // std_radr_ = 0.15;
-
-  // // Radar measurement noise standard deviation angle in rad
-  // // std_radphi_ = 0.03;
-  // // std_radphi_ = 0.0175;
-  // // std_radphi_ = 0.1;
-  // // std_radphi_ = 0.15;
-  // std_radphi_ = 0.5;
-
-  // // Radar measurement noise standard deviation radius change in m/s
-  // // std_radrd_ = 0.3;
-  // // std_radrd_ = 0.1;
-  // // std_radrd_ = 1;
-  // std_radrd_ = 0.03;
-
+  // parameters to tune
   std_a_ = 0.2;
   std_yawdd_ = 0.2;
   std_laspx_ = 0.015;
@@ -89,23 +39,6 @@ UKF::UKF() {
   std_radr_ = 0.1;
   std_radphi_ = 0.0175;
   std_radrd_ = 0.1;
-
-  /**
-  TODO:
-
-  Complete the initialization. See ukf.h for other member properties.
-
-  Hint: one or more values initialized above might be wildly off...
-  */
-  ///* State dimension
-  // int n_x_ = 5;
-  n_x_ = 5;
-
-  ///* Augmented state dimension
-  n_aug_ = 7;
-
-  ///* Sigma point spreading parameter
-  // lambda_ = 3 - n_x_;
 
 }
 
@@ -140,7 +73,6 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
                0.0030,    0.0011,    0.0054,    0.0007,    0.0008,
               -0.0022,    0.0071,    0.0007,    0.0098,    0.0100,
               -0.0020,    0.0060,    0.0008,    0.0100,    0.0123;
-      // P_ = MatrixXd::Identity(5, 5);
 
       if (meas_package.sensor_type_ == MeasurementPackage::RADAR) {
           /**
@@ -148,9 +80,6 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
           */
           float ro = meas_package.raw_measurements_[0];
           float theta = meas_package.raw_measurements_[1];
-          /*
-          * should convert the polor values to cartesian values, includ p and x, but don't know how to calculate the vx and vy fro, ro_dot, just get the px and py, and leave the vx, vy both zero.
-          * */
           x_ << ro * cos(theta), ro * sin(theta), 0, 0, 0;
       } else if (meas_package.sensor_type_ == MeasurementPackage::LASER) {
           /**
@@ -192,8 +121,8 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
     UpdateLidar(meas_package);
   }
   // print the output
-   cout << "x_ = " << x_ << endl;
-   cout << "P_ = " << P_ << endl;
+   // cout << "x_ = " << x_ << endl;
+   // cout << "P_ = " << P_ << endl;
 
 }
 
@@ -260,14 +189,6 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
 }
 
 void UKF::GenerateSigmaPoints(MatrixXd& Xsig) {
-  // the n_x_ has to be initialized in the header file, initialization in
-  // cpp file can not be referenced.  
-  // stupid mistake, I copied the code with "int n_x_ = 5", the int declares another value
-  // not the one from the header file. 
-
-  // cout << *this->n_aug_ << *this->n_x_ << endl;
-  // cout << *n_aug_ << *n_x_ << endl;
-  // cout << n_aug_ << "----" << n_x_ << endl;
   Xsig = MatrixXd(n_x_, 2 * n_x_ + 1);
 
   //calculate square root of P
@@ -403,10 +324,7 @@ void UKF::PredictMeanAndCovariance(VectorXd& x_pred, MatrixXd& P_pred) {
   for (int i = 0; i < 2 * n_aug_ + 1; i++) {  //iterate over sigma points
     // state difference
     VectorXd x_diff = Xsig_pred.col(i) - x_; //x is the predicted mean
-    //angle normalization   // how to understand this? 
-    while (x_diff(3)> M_PI) x_diff(3)-=2.*M_PI;
-    while (x_diff(3)<-M_PI) x_diff(3)+=2.*M_PI;
-
+    x_diff(3) = normalizeAngle(x_diff(3));
     P_pred = P_pred + weights_(i) * x_diff * x_diff.transpose() ;
   }
 }
@@ -468,8 +386,9 @@ void UKF::PredictRadarMeasurement(VectorXd& z_out, MatrixXd& S_out, MatrixXd& zs
     VectorXd z_diff = Zsig.col(i) - z_pred;
 
     //angle normalization
-    while (z_diff(1)> M_PI) z_diff(1)-=2.*M_PI;
-    while (z_diff(1)<-M_PI) z_diff(1)+=2.*M_PI;
+    // while (z_diff(1)> M_PI) z_diff(1)-=2.*M_PI;
+    // while (z_diff(1)<-M_PI) z_diff(1)+=2.*M_PI;
+    z_diff(1) = normalizeAngle(z_diff(1));
 
     S = S + weights_(i) * z_diff * z_diff.transpose();
   }
@@ -524,14 +443,16 @@ void UKF::UpdateState(VectorXd& x_out, MatrixXd& P_out, VectorXd& z) {
     //residual
     VectorXd z_diff = Zsig.col(i) - z_pred;
     //angle normalization
-    while (z_diff(1)> M_PI) z_diff(1)-=2.*M_PI;
-    while (z_diff(1)<-M_PI) z_diff(1)+=2.*M_PI;
+    // while (z_diff(1)> M_PI) z_diff(1)-=2.*M_PI;
+    // while (z_diff(1)<-M_PI) z_diff(1)+=2.*M_PI;
+    z_diff(1) = normalizeAngle(z_diff(1));
 
     // state difference
     VectorXd x_diff = Xsig_pred.col(i) - x_;
     //angle normalization
-    while (x_diff(3)> M_PI) x_diff(3)-=2.*M_PI;
-    while (x_diff(3)<-M_PI) x_diff(3)+=2.*M_PI;
+    // while (x_diff(3)> M_PI) x_diff(3)-=2.*M_PI;
+    // while (x_diff(3)<-M_PI) x_diff(3)+=2.*M_PI;
+    x_diff(3) = normalizeAngle(x_diff(3));
 
     Tc = Tc + weights_(i) * x_diff * z_diff.transpose();
   }
@@ -542,9 +463,7 @@ void UKF::UpdateState(VectorXd& x_out, MatrixXd& P_out, VectorXd& z) {
   //residual
   VectorXd z_diff = z - z_pred;
 
-  //angle normalization
-  while (z_diff(1)> M_PI) z_diff(1)-=2.*M_PI;
-  while (z_diff(1)<-M_PI) z_diff(1)+=2.*M_PI;
+  z_diff(1) = normalizeAngle(z_diff(1));
 
   //update state mean and covariance matrix
   x_ = x_ + K * z_diff;
@@ -553,4 +472,10 @@ void UKF::UpdateState(VectorXd& x_out, MatrixXd& P_out, VectorXd& z) {
   //write result
   x_out = x_;
   P_out = P_;
+}
+
+double UKF::normalizeAngle(double angle) {
+  while (angle> M_PI) angle-=2.*M_PI;
+  while (angle<-M_PI) angle+=2.*M_PI;
+  return angle;
 }

@@ -28,7 +28,7 @@ int main() {
     vector<VectorXd> ground_truth;
 
     for (size_t k = 0; k < N; ++k) {	//start filtering from the second frame (the speed is unknown in the first frame)
-        cout << k << "====" << endl;
+        // cout << k << "====" << endl;
 //        cout << measurement_pack_list[k].ground_truth_ << endl;
         ukf.ProcessMeasurement(measurement_pack_list[k]);
 
@@ -61,10 +61,13 @@ int main() {
 
         ground_truth.push_back(measurement_pack_list[k].ground_truth_);
 
-        VectorXd rmse(4);
-        rmse = tools.CalculateRMSE(estimations, ground_truth);
-        cout << "rmse=\n" << rmse.transpose() << endl;
+        // VectorXd rmse(4);
+        // rmse = tools.CalculateRMSE(estimations, ground_truth);
+        // cout << "rmse=\n" << rmse.transpose() << endl;
 
     }
+    VectorXd rmse(4);
+    rmse = tools.CalculateRMSE(estimations, ground_truth);
+    cout << "rmse=\n" << rmse.transpose() << endl;
     return 0;
 }

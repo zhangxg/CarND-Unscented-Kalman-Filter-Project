@@ -112,6 +112,10 @@ public:
   void PredictMeanAndCovariance(VectorXd& x_pred, MatrixXd& P_pred);
   void PredictRadarMeasurement(VectorXd& z_out, MatrixXd& S_out, MatrixXd& zsig_out);
   void UpdateState(VectorXd& x_out, MatrixXd& P_out, VectorXd& z);
+  // double normalizeAngle(double angle);
+private:
+  double normalizeAngle(double angel);
+
 };
 
 #endif /* UKF_H */
