@@ -92,6 +92,17 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
 
       // done initializing, no need to predict or update
       time_us_ = meas_package.timestamp_;
+      
+      // create vector for weights, the weights only be calculated once
+      weights_ = VectorXd(2*n_aug_+1);
+      lambda_ = 3 - n_aug_;
+      weights_(0) = lambda_/(lambda_+n_aug_);
+      for (int i = 1; i < n_aug_*2+1; ++i)
+      {
+        // cout << i << endl;
+        weights_(i) = 0.5 / (lambda_ + n_aug_);
+      }
+
       is_initialized_ = true;
       return;
   }
@@ -299,18 +310,18 @@ void UKF::PredictMeanAndCovariance(VectorXd& x_pred, MatrixXd& P_pred) {
   SigmaPointPrediction(Xsig_pred);
   // cout << "x_prediction: " << endl << Xsig_pred << endl;
 
-  // create vector for weights
-  weights_ = VectorXd(2*n_aug_+1);
-  lambda_ = 3 - n_aug_;
-  weights_(0) = lambda_/(lambda_+n_aug_);
-  for (int i = 1; i < n_aug_*2+1; ++i)
-  {
-    // cout << i << endl;
-    weights_(i) = 0.5 / (lambda_ + n_aug_);
-  }
+  // // create vector for weights
+  // weights_ = VectorXd(2*n_aug_+1);
+  // lambda_ = 3 - n_aug_;
+  // weights_(0) = lambda_/(lambda_+n_aug_);
+  // for (int i = 1; i < n_aug_*2+1; ++i)
+  // {
+  //   // cout << i << endl;
+  //   weights_(i) = 0.5 / (lambda_ + n_aug_);
+  // }
   // VectorXd weights_ = calculateWeights(n_aug_);
   // calculateWeights(n_aug_, weights_);
-  cout << weights_ << endl;
+  // cout << weights_ << endl;
 
   // cout << "weights1:" << endl << weights_ << endl;
   //create vector for predicted state
@@ -330,6 +341,7 @@ void UKF::PredictMeanAndCovariance(VectorXd& x_pred, MatrixXd& P_pred) {
     x_diff(3) = normalizeAngle(x_diff(3));
     P_pred = P_pred + weights_(i) * x_diff * x_diff.transpose() ;
   }
+  Xsig_pred_ = Xsig_pred;  // cache the values
 }
 
 void UKF::PredictRadarMeasurement(VectorXd& z_out, MatrixXd& S_out, MatrixXd& zsig_out) {
@@ -337,19 +349,21 @@ void UKF::PredictRadarMeasurement(VectorXd& z_out, MatrixXd& S_out, MatrixXd& zs
   int n_z = 3;
 
   //define spreading parameter
-  lambda_ = 3 - n_aug_;
+  // lambda_ = 3 - n_aug_;
 
-  //set vector for weights
-  weights_ = VectorXd(2*n_aug_+1);
-  weights_(0) = lambda_/(lambda_ + n_aug_);
-  for (int i=1; i<2*n_aug_+1; i++) {  
-    // double weight = 0.5/(n_aug+lambda);
-    weights_(i) = 0.5/(n_aug_+lambda_);
-  }
+  // //set vector for weights
+  // weights_ = VectorXd(2*n_aug_+1);
+  // weights_(0) = lambda_/(lambda_ + n_aug_);
+  // for (int i=1; i<2*n_aug_+1; i++) {  
+  //   // double weight = 0.5/(n_aug+lambda);
+  //   weights_(i) = 0.5/(n_aug_+lambda_);
+  // }
 
   //create example matrix with predicted sigma points
-  MatrixXd Xsig_pred; // = MatrixXd(n_x, 2 * n_aug + 1);
-  SigmaPointPrediction(Xsig_pred);
+  // MatrixXd Xsig_pred; // = MatrixXd(n_x, 2 * n_aug + 1);
+  // SigmaPointPrediction(Xsig_pred);
+  MatrixXd Xsig_pred = Xsig_pred_;
+
   //create matrix for sigma points in measurement space
   MatrixXd Zsig = MatrixXd(n_z, 2 * n_aug_ + 1);
 
@@ -413,9 +427,10 @@ void UKF::UpdateState(VectorXd& x_out, MatrixXd& P_out, VectorXd& z) {
   int n_z = 3;
 
   //define spreading parameter
-  double lambda = 3 - n_aug_;
-  MatrixXd Xsig_pred;
-  SigmaPointPrediction(Xsig_pred);
+  // double lambda = 3 - n_aug_;
+  // MatrixXd Xsig_pred;
+  // SigmaPointPrediction(Xsig_pred);
+  MatrixXd Xsig_pred = Xsig_pred_;
   // cout << "Xsig_pred: " << endl << Xsig_pred << endl;
 
   MatrixXd Zsig;

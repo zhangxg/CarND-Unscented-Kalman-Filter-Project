@@ -32,7 +32,7 @@ public:
   MatrixXd Xsig_pred_;
 
   ///* the augumented sigma points
-  MatrixXd Xsig_aug_;
+  // MatrixXd Xsig_aug_;
 
   ///* time when the state is true, in us
   long long time_us_;
