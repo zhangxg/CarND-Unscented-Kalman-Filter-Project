@@ -31,6 +31,9 @@ public:
   ///* predicted sigma points matrix
   MatrixXd Xsig_pred_;
 
+  ///* the augumented sigma points
+  MatrixXd Xsig_aug_;
+
   ///* time when the state is true, in us
   long long time_us_;
 
@@ -115,6 +118,8 @@ public:
   // double normalizeAngle(double angle);
 private:
   double normalizeAngle(double angel);
+  // VectorXd calculateWeights(int numSigmaPoints); // can not return correct value
+  void calculateWeights(int numSigmaPoints, VectorXd& weights);
 
 };
 

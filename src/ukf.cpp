@@ -247,8 +247,6 @@ void UKF::SigmaPointPrediction(MatrixXd& Xsig_pred) {
   //create matrix with predicted sigma points as columns
   Xsig_pred = MatrixXd(n_x_, 2 * n_aug_ + 1);
 
-  // double delta_t = 0.1; //time diff in sec
-
   //predict sigma points
   for (int i = 0; i< 2*n_aug_+1; i++)
   {
@@ -301,14 +299,19 @@ void UKF::PredictMeanAndCovariance(VectorXd& x_pred, MatrixXd& P_pred) {
   SigmaPointPrediction(Xsig_pred);
   // cout << "x_prediction: " << endl << Xsig_pred << endl;
 
-  //create vector for weights
+  // create vector for weights
   weights_ = VectorXd(2*n_aug_+1);
   lambda_ = 3 - n_aug_;
   weights_(0) = lambda_/(lambda_+n_aug_);
   for (int i = 1; i < n_aug_*2+1; ++i)
   {
+    // cout << i << endl;
     weights_(i) = 0.5 / (lambda_ + n_aug_);
   }
+  // VectorXd weights_ = calculateWeights(n_aug_);
+  // calculateWeights(n_aug_, weights_);
+  cout << weights_ << endl;
+
   // cout << "weights1:" << endl << weights_ << endl;
   //create vector for predicted state
   x_pred = VectorXd(n_x_);
@@ -478,4 +481,17 @@ double UKF::normalizeAngle(double angle) {
   while (angle> M_PI) angle-=2.*M_PI;
   while (angle<-M_PI) angle+=2.*M_PI;
   return angle;
+}
+
+void UKF::calculateWeights(int numSigmaPoints, VectorXd& weights) {
+  //define spreading parameter
+  int lambda = 3 - numSigmaPoints;
+  //set vector for weights
+  // VectorXd weights = VectorXd(2*numSigmaPoints+1);
+  weights = VectorXd(2*numSigmaPoints+1);
+  weights(0) = lambda/(lambda + numSigmaPoints);
+  for (int i=1; i<2*numSigmaPoints+1; i++) {  
+    weights(i) = 0.5/(lambda + numSigmaPoints);
+  }
+  // return weights;
 }
