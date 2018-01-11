@@ -32,13 +32,35 @@ UKF::UKF() {
   n_aug_ = 7;
 
   // parameters to tune
+  // std_a_ = 0.2;
+  // std_yawdd_ = 0.2;
+  // std_laspx_ = 0.015;
+  // std_laspy_ = 0.015;
+  // std_radr_ = 0.1;
+  // std_radphi_ = 0.0175;
+  // std_radrd_ = 0.1;
+
+  // Process noise standard deviation longitudinal acceleration in m/s^2
+  // std_a_ = 30;
+  // std_yawdd_ = 30;
+
   std_a_ = 0.2;
   std_yawdd_ = 0.2;
-  std_laspx_ = 0.015;
-  std_laspy_ = 0.015;
-  std_radr_ = 0.1;
-  std_radphi_ = 0.0175;
-  std_radrd_ = 0.1;
+
+  // Laser measurement noise standard deviation position1 in m
+  std_laspx_ = 0.15;
+
+  // Laser measurement noise standard deviation position2 in m
+  std_laspy_ = 0.15;
+
+  // Radar measurement noise standard deviation radius in m
+  std_radr_ = 0.3;
+
+  // Radar measurement noise standard deviation angle in rad
+  std_radphi_ = 0.03;
+
+  // Radar measurement noise standard deviation radius change in m/s
+  std_radrd_ = 0.3;
 
 }
 
@@ -67,12 +89,13 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
       x_ = VectorXd(5);
 
       // initial covariance matrix
-      P_ = MatrixXd(5, 5);
-      P_ <<   0.0043,   -0.0013,    0.0030,   -0.0022,   -0.0020,
-              -0.0013,    0.0077,    0.0011,    0.0071,    0.0060,
-               0.0030,    0.0011,    0.0054,    0.0007,    0.0008,
-              -0.0022,    0.0071,    0.0007,    0.0098,    0.0100,
-              -0.0020,    0.0060,    0.0008,    0.0100,    0.0123;
+      // P_ = MatrixXd(5, 5);
+      // P_ <<   0.0043,   -0.0013,    0.0030,   -0.0022,   -0.0020,
+      //         -0.0013,    0.0077,    0.0011,    0.0071,    0.0060,
+      //          0.0030,    0.0011,    0.0054,    0.0007,    0.0008,
+      //         -0.0022,    0.0071,    0.0007,    0.0098,    0.0100,
+      //         -0.0020,    0.0060,    0.0008,    0.0100,    0.0123;
+      P_ = MatrixXd::Identity(5, 5);
 
       if (meas_package.sensor_type_ == MeasurementPackage::RADAR) {
           /**
