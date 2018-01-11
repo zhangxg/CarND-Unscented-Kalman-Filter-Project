@@ -12,6 +12,7 @@ using std::vector;
 
 /**
  * Initializes Unscented Kalman filter
+ * This is scaffolding, do not modify
  */
 UKF::UKF() {
 
@@ -47,6 +48,10 @@ UKF::UKF() {
   std_a_ = 0.2;
   std_yawdd_ = 0.2;
 
+  // Process noise standard deviation yaw acceleration in rad/s^2
+  std_yawdd_ = 30;
+  
+  //DO NOT MODIFY measurement noise values below these are provided by the sensor manufacturer.
   // Laser measurement noise standard deviation position1 in m
   std_laspx_ = 0.15;
 
@@ -62,6 +67,16 @@ UKF::UKF() {
   // Radar measurement noise standard deviation radius change in m/s
   std_radrd_ = 0.3;
 
+  //DO NOT MODIFY measurement noise values above these are provided by the sensor manufacturer.
+  
+  /**
+  TODO:
+
+  Complete the initialization. See ukf.h for other member properties.
+
+  Hint: one or more values initialized above might be wildly off...
+  */
+>>>>>>> ef1bae563d356429e4da46d5e399be96c0bb6710
 }
 
 UKF::~UKF() {}
