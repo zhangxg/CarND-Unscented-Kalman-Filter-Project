@@ -50,7 +50,7 @@ UKF::UKF() {
 
   // Process noise standard deviation yaw acceleration in rad/s^2
   std_yawdd_ = 30;
-  
+
   //DO NOT MODIFY measurement noise values below these are provided by the sensor manufacturer.
   // Laser measurement noise standard deviation position1 in m
   std_laspx_ = 0.15;
@@ -68,7 +68,7 @@ UKF::UKF() {
   std_radrd_ = 0.3;
 
   //DO NOT MODIFY measurement noise values above these are provided by the sensor manufacturer.
-  
+
   /**
   TODO:
 
@@ -76,7 +76,6 @@ UKF::UKF() {
 
   Hint: one or more values initialized above might be wildly off...
   */
->>>>>>> ef1bae563d356429e4da46d5e399be96c0bb6710
 }
 
 UKF::~UKF() {}
@@ -123,14 +122,14 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
           /**
           Initialize state.
           */
-          x_ << 
+          x_ <<
               meas_package.raw_measurements_[0],
               meas_package.raw_measurements_[0], 0, 0, 0;
       }
 
       // done initializing, no need to predict or update
       time_us_ = meas_package.timestamp_;
-      
+
       // create vector for weights, the weights only be calculated once
       weights_ = VectorXd(2*n_aug_+1);
       lambda_ = 3 - n_aug_;
@@ -205,20 +204,20 @@ void UKF::UpdateLidar(MeasurementPackage meas_package) {
   You'll also need to calculate the lidar NIS.
   */
   MatrixXd H_ = MatrixXd(2, 5);
-  H_ << 
+  H_ <<
       1, 0, 0, 0, 0,
       0, 1, 0, 0, 0;
   MatrixXd R_ = MatrixXd(2, 2);
-  R_ << 
+  R_ <<
       std_laspx_*std_laspx_, 0,
       0, std_laspy_*std_laspy_;
   VectorXd z = meas_package.raw_measurements_;
-  VectorXd y = z - H_ * x_;             
-  MatrixXd Ht = H_.transpose();         
-  MatrixXd S = H_ * P_ * Ht + R_;       
-  MatrixXd K = P_ * Ht * S.inverse();   
-  x_ += K * y;                          
-  P_ = (MatrixXd::Identity(5, 5) - K * H_) * P_;  
+  VectorXd y = z - H_ * x_;
+  MatrixXd Ht = H_.transpose();
+  MatrixXd S = H_ * P_ * Ht + R_;
+  MatrixXd K = P_ * Ht * S.inverse();
+  x_ += K * y;
+  P_ = (MatrixXd::Identity(5, 5) - K * H_) * P_;
 }
 
 /**
@@ -243,17 +242,17 @@ void UKF::GenerateSigmaPoints(MatrixXd& Xsig) {
   //calculate square root of P
   MatrixXd A = P_.llt().matrixL();
   // cout << "A" << endl << A << endl;
-  
+
   Xsig.col(0) = x_;
 
-  lambda_ = 3 - n_x_;   // needs to calculate here. 
+  lambda_ = 3 - n_x_;   // needs to calculate here.
   float lambda_sqrt = sqrt(lambda_ + n_x_);
 
   for (int i = 0; i < n_x_; ++i)
   {
     Xsig.col(i+1) = x_ + lambda_sqrt * A.col(i);
     Xsig.col(i+n_x_+1) = x_ - A.col(i) * lambda_sqrt;
-  }  
+  }
 }
 
 void UKF::AugmentedSigmaPoints(MatrixXd& Xsig_out) {
@@ -275,7 +274,7 @@ void UKF::AugmentedSigmaPoints(MatrixXd& Xsig_out) {
 
   //create square root matrix
   MatrixXd A = P_aug.llt().matrixL();
-  // cout << "p_aug_sqrt" << endl << A << endl;  
+  // cout << "p_aug_sqrt" << endl << A << endl;
 
   //create augmented sigma points
   Xsig_out = MatrixXd(n_aug_, 2 * n_aug_ + 1);
@@ -392,7 +391,7 @@ void UKF::PredictRadarMeasurement(VectorXd& z_out, MatrixXd& S_out, MatrixXd& zs
   // //set vector for weights
   // weights_ = VectorXd(2*n_aug_+1);
   // weights_(0) = lambda_/(lambda_ + n_aug_);
-  // for (int i=1; i<2*n_aug_+1; i++) {  
+  // for (int i=1; i<2*n_aug_+1; i++) {
   //   // double weight = 0.5/(n_aug+lambda);
   //   weights_(i) = 0.5/(n_aug_+lambda_);
   // }
@@ -407,7 +406,7 @@ void UKF::PredictRadarMeasurement(VectorXd& z_out, MatrixXd& S_out, MatrixXd& zs
 
   //mean predicted measurement
   VectorXd z_pred = VectorXd(n_z);
-  
+
   //measurement covariance matrix S
   MatrixXd S = MatrixXd(n_z,n_z);
 
@@ -453,7 +452,7 @@ void UKF::PredictRadarMeasurement(VectorXd& z_out, MatrixXd& S_out, MatrixXd& zs
   R <<    std_radr_*std_radr_, 0, 0,
           0, std_radphi_*std_radphi_, 0,
           0, 0,std_radrd_*std_radrd_;
-  S = S + R;  
+  S = S + R;
   //write result
   z_out = z_pred;
   S_out = S;
@@ -480,7 +479,7 @@ void UKF::UpdateState(VectorXd& x_out, MatrixXd& P_out, VectorXd& z) {
   // cout << "z_pred: " << endl << z_pred << endl;
   // cout << "S: " << endl << S << endl;
 
-  // cout << "weights_ " << endl << weights_ << endl;  
+  // cout << "weights_ " << endl << weights_ << endl;
 
   //create example vector for incoming radar measurement
   // VectorXd z = VectorXd(n_z);
@@ -543,7 +542,7 @@ void UKF::calculateWeights(int numSigmaPoints, VectorXd& weights) {
   // VectorXd weights = VectorXd(2*numSigmaPoints+1);
   weights = VectorXd(2*numSigmaPoints+1);
   weights(0) = lambda/(lambda + numSigmaPoints);
-  for (int i=1; i<2*numSigmaPoints+1; i++) {  
+  for (int i=1; i<2*numSigmaPoints+1; i++) {
     weights(i) = 0.5/(lambda + numSigmaPoints);
   }
   // return weights;
